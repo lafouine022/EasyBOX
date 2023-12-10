@@ -280,7 +280,7 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 
 	# installation xmlrpc libtorrent rtorrent
 	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/mirror/xmlrpc-c.git
+	"$CMDGIT" clone --progress https://github.com/lafouine022/xmlrpc-c.git
 
 	cd xmlrpc-c/stable || exit
 	./configure #--disable-cplusplus
@@ -290,8 +290,8 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 
 	# clone rtorrent et libtorrent
 	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/rakshasa/libtorrent.git
-	"$CMDGIT" clone --progress https://github.com/rakshasa/rtorrent.git
+	"$CMDGIT" clone --progress https://github.com/lafouine022/libtorrent.git
+	"$CMDGIT" clone --progress https://github.com/lafouine022/rtorrent.git
 
 	# compilation libtorrent
 	cd libtorrent || exit
@@ -323,44 +323,8 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 	"$CMDCP" -R "$BONOBOX"/base "$NGINXBASE"
 
 	# téléchargement et déplacement de rutorrent
-	"$CMDGIT" clone --progress https://github.com/Novik/ruTorrent.git "$RUTORRENT"
+	"$CMDGIT" clone --progress https://github.com/lafouine022/ruTorrent.git "$RUTORRENT"
 	"$CMDECHO" ""; set "146" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
-
-	# installation des plugins - thank Micdu70 ;)
-	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/exrat/rutorrent-plugins-pack
-
-	for PLUGINS in 'addzip' 'chat' 'filemanager' 'filemanager-share' 'toggle_details_button' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui' 'ratiocolor' 'titlebar' 'trackerstatus'; do
-		"$CMDCP" -R /tmp/rutorrent-plugins-pack/"$PLUGINS" "$RUPLUGINS"/
-	done
-
-	# installation cloudscraper pour _cloudflare
-	"$CMDPIP" install setuptools --upgrade
-	"$CMDPIP" install cloudscraper
-
-	# configuration geoip2
-	cd "$RUPLUGINS"/geoip2/database || exit
-
-	for DATABASE in *.tar.gz; do
-		"$CMDTAR" xzfv "$DATABASE"
-	done
-
-	"$CMDRM" -R GeoLite2-City.mmdb.tar.gz GeoLite2-Country.mmdb.tar.gz
-
-	# configuration filemanager
-	"$CMDCP" -f "$FILES"/rutorrent/filemanager.conf "$RUPLUGINS"/filemanager/conf.php
-	"$CMDSED" -i "s|@RAR@|$CMDRAR|g;" "$RUPLUGINS"/filemanager/conf.php
-	"$CMDSED" -i "s|@ZIP@|$CMDZIP|g;" "$RUPLUGINS"/filemanager/conf.php
-	"$CMDSED" -i "s|@UNZIP@|$CMDUNZIP|g;" "$RUPLUGINS"/filemanager/conf.php
-	"$CMDSED" -i "s|@TAR@|$CMDTAR|g;" "$RUPLUGINS"/filemanager/conf.php
-	#"$CMDSED" -i "s|@GZIP@|$CMDGZIP|g;" "$RUPLUGINS"/filemanager/conf.php
-	#"$CMDSED" -i "s|@BZIP2@|$CMDBZIP2|g;" "$RUPLUGINS"/filemanager/conf.php
-
-	# configuration filemanager-share
-	"$CMDCP" -f "$FILES"/rutorrent/filemanager-share.conf "$RUPLUGINS"/filemanager-share/conf.php
-	"$CMDSED" -i "s/@IP@/$IP/g;" "$RUPLUGINS"/filemanager-share/conf.php
-	"$CMDCHOWN" -R "$WDATA" "$RUPLUGINS"/filemanager-share
-	"$CMDLN" -s "$RUPLUGINS"/filemanager-share/share.php "$NGINXBASE"/share.php
 
 	# configuration create
 	# shellcheck disable=SC2154
@@ -386,20 +350,16 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 	FONCBAKSESSION
 
 	# ajout thèmes
-	"$CMDRM" -R "${RUPLUGINS:?}"/theme/themes/Blue
-	"$CMDCP" -R "$BONOBOX"/theme/ru/Blue "$RUPLUGINS"/theme/themes/Blue
-	"$CMDCP" -R "$BONOBOX"/theme/ru/SpiritOfBonobo "$RUPLUGINS"/theme/themes/SpiritOfBonobo
-	"$CMDGIT" clone --progress https://github.com/themightykitten/ruTorrent-MaterialDesign.git "$RUPLUGINS"/theme/themes/MaterialDesign
+	"$CMDCP" -R "$BONOBOX"/theme/ru/QuickBox-Dark "$RUPLUGINS"/theme/themes/QuickBox-Dark
 
 	# configuration thème
-	"$CMDSED" -i "s/defaultTheme = \"\"/defaultTheme = \"SpiritOfBonobo\"/g;" "$RUPLUGINS"/theme/conf.php
+	"$CMDSED" -i "s/defaultTheme = \"\"/defaultTheme = \"QuickBox-Dark\"/g;" "$RUPLUGINS"/theme/conf.php
 
 	"$CMDECHO" ""; set "148" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	# liens symboliques et permissions
 	"$CMDLDCONFIG"
 	"$CMDCHOWN" -R "$WDATA" "$RUTORRENT"
-	"$CMDCHMOD" -R 777 "$RUPLUGINS"/filemanager/scripts
 	"$CMDCHOWN" -R "$WDATA" "$NGINXBASE"
 
 	# configuration php
@@ -605,6 +565,17 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 	"$CMDECHO" "$HISTOLOG.log">> "$RUTORRENT"/"$HISTOLOG".log
 	"$CMDECHO" "userlog">> "$RUTORRENT"/"$HISTOLOG".log
 	"$CMDSED" -i "s/userlog/$USER:5001/g;" "$RUTORRENT"/"$HISTOLOG".log
+
+        # //////////AJOUT FOUINI/////////
+	#Liens symbolique pour le files manager
+	"$CMDLN" -s /home /var/www/rutorrent/files-manager/files/
+	#Droit d'execution sur les fichiers pour le files manager
+	"$CMDCP" -f "$FILES"/sudoers/sudoers /etc/sudoers
+	#DONNER LES DROIT A TOUS LE HOME
+	"$CMDCHOWN" -R www-data:www-data /home
+	#Text pour dire que l'install est OK
+	"$CMDECHO" ""; set "179" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
+	# //////////FIN AJOUT FOUINI/////////
 
 	set "180"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
 	if [ ! -f "$ARGFILE" ]; then
