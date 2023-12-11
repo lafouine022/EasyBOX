@@ -43,6 +43,9 @@ if FONCYES "$VALIDE"; then
 		set "244" "256"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Supprimer utilisateur 3 = 240
 		set "246" "296"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Débug 4 = 242
 		set "310" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Sortie 7 = 310
+		"$CMDECHO" -e "\e[38;5;201mEasyBOX by FOUINI\e[0m"
+		set "312" "313"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Plex = 50
+		set "314" "315"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # OpenVPN = 51
 		set "260"; FONCTXT "$1"; "$CMDECHO" -n -e "${CBLUE}$TXT1 ${CEND}"
 		read -r OPTION
 
@@ -346,6 +349,25 @@ if FONCYES "$VALIDE"; then
 					"$CMDSYSTEMCTL" reboot
 				fi
 				break
+			;;
+			
+			50)
+				"$CMDAPTGET" install apt-transport-https -y
+				"$CMDECHO" "deb https://downloads.plex.tv/repo/deb/ public main" > /etc/apt/sources.list.d/plexmediaserver.list
+				"$CMDWGET" -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | "$CMDAPTKEY" add -
+				# voir en dessous pour utiliser FONCSERVICE avec systemctl à la place de "$CMDSERVICE"
+				"$CMDAPTITUDE" update && "$CMDAPTITUDE" install -y plexmediaserver && "$CMDSERVICE" plexmediaserver start
+				#ajout icon de plex
+				if [ ! -d "$RUPLUGINS"/linkplex ];then
+					"$CMDGIT" clone --progress https://github.com/xavier84/linkplex "$RUPLUGINS"/linkplex
+					"$CMDCHOWN" -R "$WDATA" "$RUPLUGINS"/linkplex
+
+				fi
+			;;
+			
+			51)
+				"$CMDWGET" https://raw.githubusercontent.com/xavier84/Script-xavier/master/openvpn/openvpn-install.sh
+				"$CMDCHMOD" +x openvpn-install.sh && ./openvpn-install.sh
 			;;
 
 			*) # fail
