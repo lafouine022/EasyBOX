@@ -8,8 +8,10 @@ apt-get install git lsb-release -y
 
 cd /tmp
 git clone https://github.com/lafouine022/rutorrent-bonobox
-cd rutorrent-bonobox
+mv rutorrent-bonobox ratxabox
+cd ratxabox
 chmod a+x bonobox.sh && ./bonobox.sh --fr
+
 
 # English
 chmod a+x bonobox.sh && ./bonobox.sh --en
