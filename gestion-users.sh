@@ -41,6 +41,8 @@ if FONCYES "$VALIDE"; then
 		set "240" "256"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "242" "296"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "244" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+                set "246" "309"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+		set "310" "311"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "260"; FONCTXT "$1"; "$CMDECHO" -n -e "${CBLUE}$TXT1 ${CEND}"
 		read -r OPTION
 
@@ -232,6 +234,98 @@ if FONCYES "$VALIDE"; then
 					"$CMDSYSTEMCTL" reboot
 				fi
 				break
+			;;
+
+                        6) # suspendre utilisateur
+				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
+				read -r USER
+
+				# variable email (rétro compatible)
+				TESTMAIL=$("$CMDSED" -n "1 p" "$RUTORRENT"/"$HISTOLOG".log)
+				if [[ "$TESTMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]*$ ]]; then
+					EMAIL="$TESTMAIL"
+				else
+					EMAIL=contact@exemple.com
+				fi
+
+				# récupération ip serveur
+				FONCIP
+
+				# variable utilisateur majuscule
+				USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
+
+				"$CMDECHO" ""; set "262"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
+				"$CMDUPDATERC" "$USER"-rtorrent remove
+
+				# contrôle présence utilitaire
+				if [ ! -f "$NGINXBASE"/aide/contact.html ]; then
+					cd /tmp || exit
+					"$CMDWGET" http://www.bonobox.net/script/contact.tar.gz
+					"$CMDTAR" xzfv contact.tar.gz
+					"$CMDCP" -f /tmp/contact/contact.html "$NGINXBASE"/aide/contact.html
+					"$CMDCP" -f /tmp/contact/style/style.css "$NGINXBASE"/aide/style/style.css
+				fi
+
+				# page support
+				"$CMDCP" -f "$NGINXBASE"/aide/contact.html "$NGINXBASE"/"$USER".html
+				"$CMDSED" -i "s/@USER@/$USER/g;" "$NGINXBASE"/"$USER".html
+				"$CMDCHOWN" -R "$WDATA" "$NGINXBASE"/"$USER".html
+
+				# seedbox-manager service minimum
+				"$CMDMV" "$SBMCONFUSER"/"$USER"/config.ini "$SBMCONFUSER"/"$USER"/config.bak
+				if [ ! -f "$SBM"/sbm_v3 ]; then
+					"$CMDCP" -f "$FILES"/sbm_old/config-mini.ini "$SBMCONFUSER"/"$USER"/config.ini
+				else
+					"$CMDCP" -f "$FILES"/sbm/config-mini.ini "$SBMCONFUSER"/"$USER"/config.ini
+				fi
+
+				"$CMDSED" -i "s/\"\/\"/\"\/home\/$USER\"/g;" "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDSED" -i "s/https:\/\/rutorrent.domaine.fr/..\/$USER.html/g;" "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDSED" -i "s/https:\/\/graph.domaine.fr/..\/$USER.html/g;" "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDSED" -i "s/RPC1/$USERMAJ/g;" "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDSED" -i "s/contact@mail.com/$EMAIL/g;" "$SBMCONFUSER"/"$USER"/config.ini
+
+				"$CMDCHOWN" -R "$WDATA" "$SBMCONFUSER"
+
+				# stop user
+				FONCSERVICE stop "$USER"-rtorrent
+				if [ -f "/etc/irssi.conf" ]; then
+					FONCSERVICE stop "$USER"-irssi
+				fi
+				"$CMDPKILL" -u "$USER"
+				"$CMDMV" /home/"$USER"/.rtorrent.rc /home/"$USER"/.rtorrent.rc.bak
+				"$CMDUSERMOD" -L "$USER"
+
+				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
+			;;
+
+			7) # rétablir utilisateur
+				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
+				read -r USER
+				"$CMDECHO" ""; set "270"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
+
+				"$CMDMV" /home/"$USER"/.rtorrent.rc.bak /home/"$USER"/.rtorrent.rc
+				# remove ancien script pour mise à jour init.d
+				"$CMDUPDATERC" "$USER"-rtorrent remove
+
+				# script rtorrent
+				FONCSCRIPTRT "$USER"
+
+				# start user
+				"$CMDRM" /home/"$USER"/.session/rtorrent.lock >/dev/null 2>&1
+				FONCSERVICE start "$USER"-rtorrent
+				if [ -f "/etc/irssi.conf" ]; then
+					FONCSERVICE start "$USER"-irssi
+				fi
+				"$CMDUSERMOD" -U "$USER"
+
+				# seedbox-manager service normal
+				"$CMDRM" "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDMV" "$SBMCONFUSER"/"$USER"/config.bak "$SBMCONFUSER"/"$USER"/config.ini
+				"$CMDCHOWN" -R "$WDATA" "$SBMCONFUSER"
+				"$CMDRM" "$NGINXBASE"/"$USER".html
+
+				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
 
 			*) # fail
