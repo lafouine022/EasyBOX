@@ -302,9 +302,8 @@ if FONCYES "$VALIDE"; then
                 USER_TO_BLOCK="$USER"
 
                 # Ajouter les lignes pour bloquer un utilisateur spécifique
-				sed -i "/location \/rutorrent {/,/if (\$remote_user = \"$USER_TO_BLOCK\") {/d; /return 301 \/$USER_TO_BLOCK.html;/d; /}/d" "$NGINX_CONFIG"
+				sed -i "/location \/rutorrent {/,/if (\$remote_user = \"$USER_TO_BLOCK\") {/ {/return 301 \/$USER_TO_BLOCK.html;/d; /if (\$remote_user = \"$USER_TO_BLOCK\") {/,/return 301 \/$USER_TO_BLOCK.html;/d; /}/d}" "$NGINX_CONFIG"
 
-				    
 				# Redémarrer Nginx pour appliquer les changements
 				sudo service nginx restart
 				echo "Success! l'utilisateur à été rétablis à la configuration NGINX et NGINX a été redémarré."
