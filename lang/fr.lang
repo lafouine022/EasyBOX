@@ -82,12 +82,12 @@
 256 : Supprimer un utilisateur
 258 : Sortir
 260 Numéro:
-262 #
+262 Suspension de l'utilisateur.
 264 L'utilisateur
 266 Debug
-268 #
-270 #
-272 #
+268 a bien été suspendu.
+270 Rétablissement de l'utilisateur.
+272 a bien été rétabli.
 274 Entrez le nouveau mot de passe pour cet utilisateur,\nou appuyez sur "
 276 Modification du mot de passe de l'utilisateur.
 278 Le mot de passe utilisateur de
