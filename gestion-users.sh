@@ -259,6 +259,13 @@ if FONCYES "$VALIDE"; then
 				"$CMDPKILL" -u "$USER"
 				"$CMDMV" /home/"$USER"/.rtorrent.rc /home/"$USER"/.rtorrent.rc.bak
 				"$CMDUSERMOD" -L "$USER"
+				##########################################################################
+				NGINX_CONFIG="/etc/nginx/sites-enabled/rutorrent.conf"
+                # Ajouter la règle de redirection pour l'utilisateur 
+                sed -i '/location \/ {/a \        if ($remote_user = "$USER") {\n            return 301 \/"$USER".html;\n        }' "$NGINX_CONFIG"
+                # Redémarrer Nginx pour appliquer les changements
+                sudo service nginx restart
+				##########################################################################
 
 				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
@@ -285,6 +292,15 @@ if FONCYES "$VALIDE"; then
 
 				# seedbox service normal
 				"$CMDRM" "$NGINXBASE"/"$USER".html
+				
+				#######################################################################
+				# Définir le chemin de la configuration Nginx
+                NGINX_CONFIG="/etc/nginx/sites-enabled/rutorrent.conf"
+                # Supprimer la règle de redirection pour l'utilisateur
+                sed -i '/if ($remote_user = "$USER") {/,/return 301 \/"$USER".html;/d' "$NGINX_CONFIG"
+				# Redémarrer Nginx pour appliquer les changements
+				sudo service nginx restart
+				#######################################################################
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
