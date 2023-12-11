@@ -1,9 +1,6 @@
-# Script d'installation ruTorrent / Nginx
+# Script d'installation ruTorrent / Nginx Pour Debian 10/11
 
-![logo](https://raw.github.com/exrat/rutorrent-bonobox/master/files/bonobox.png)
-
-* Multi-utilisateurs & Multilingue automatique en fonction de l'installation du serveur
-* Français, English, German, Pусский,  Español, Português
+* Français, English
 * Nécessite Debian 10/11 (64 bits) & un serveur fraîchement installé
 
 * Inclus VsFTPd (ftp & ftps sur le port 21), Fail2ban (avec conf nginx, ftp & ssh)
@@ -26,32 +23,15 @@ apt-get install git lsb-release -y
 cd /tmp
 git clone https://github.com/lafouine022/rutorrent-bonobox
 cd rutorrent-bonobox
-chmod a+x bonobox.sh && ./bonobox.sh
+# Français
+chmod a+x bonobox.sh && ./bonobox.sh --fr
 ```
 ![caps1](https://raw.github.com/exrat/rutorrent-bonobox/master/files/caps_script01.png)
 
 **Vous pouvez aussi forcer la langue de votre choix:**
 ```
-# Français
-chmod a+x bonobox.sh && ./bonobox.sh --fr
-
 # English
 chmod a+x bonobox.sh && ./bonobox.sh --en
-
-# Pусский  ( "д/H" или "y/n" )
-chmod a+x bonobox.sh && ./bonobox.sh --ru
-
-# German
-chmod a+x bonobox.sh && ./bonobox.sh --de
-
-# Español
-chmod a+x bonobox.sh && ./bonobox.sh --es
-
-# Português
-chmod a+x bonobox.sh && ./bonobox.sh --pt
-
-# Português do Brasil
-chmod a+x bonobox.sh && ./bonobox.sh --ptbr
 ```
 
 Pour gérer vos utilisateurs ultérieurement, il vous suffit de relancer le script
