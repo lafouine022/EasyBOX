@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # langues
-OPTS=$("$CMDGETOPT" -o vhns: --long en,fr,de,ru,es,pt,ptbr -n 'parse-options' -- "$@")
+OPTS=$("$CMDGETOPT" -o vhns: --long en,fr -n 'parse-options' -- "$@")
 eval set -- "$OPTS"
 while true; do
 	case "$1" in
