@@ -1,4 +1,4 @@
-# Script d'installation ruTorrent / Nginx Pour Debian 10/11
+# RuTorrent / Nginx Pour Debian 10/11
 
 ## Installation:
 Multilingue automatique
