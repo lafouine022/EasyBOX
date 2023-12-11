@@ -36,13 +36,13 @@ if FONCYES "$VALIDE"; then
 	while :; do
 		# menu gestion multi-utilisateurs
 		"$CMDECHO" ""; set "234"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-		set "236" "248"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" 
-		set "238" "254"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "240" "256"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "242" "296"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-        set "244" "309"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "246" "311"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "310" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+		set "236" "248"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Ajout utilisateur 1 = 236
+		set "238" "309"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Suspendre utilisateur 5 = 244
+		set "240" "311"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Rétablir utilisateur 6 = 246
+		set "242" "254"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Edit password 2 = 238
+		set "244" "256"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Supprimer utilisateur 3 = 240
+		set "246" "296"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Débug 4 = 242
+		set "310" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" # Sortie 7 = 310
 		set "260"; FONCTXT "$1"; "$CMDECHO" -n -e "${CBLUE}$TXT1 ${CEND}"
 		read -r OPTION
 
@@ -130,93 +130,8 @@ if FONCYES "$VALIDE"; then
 				set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
 				set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
 			;;
-
-			2) # modification mot de passe utilisateur
-				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
-				read -r USER
-				"$CMDECHO" ""; FONCPASS
-
-				"$CMDECHO" ""; set "276"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
-
-				# variable passe nginx
-				PASSNGINX=${USERPWD}
-
-				# modification du mot de passe
-				"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
-
-				# htpasswd
-				FONCHTPASSWD "$USER"
-
-				"$CMDECHO" ""; set "278" "280"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
-				"$CMDECHO"
-				set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
-				set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
-				set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
-				set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
-			;;
-
-			3) # suppression utilisateur
-				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
-				read -r USER
-				"$CMDECHO" ""; set "282" "284"; FONCTXT "$1" "$2"; "$CMDECHO" -n -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CGREEN}$TXT2 ${CEND}"
-				read -r SUPPR
-
-				if FONCNO "$SUPPR"; then
-					"$CMDECHO"
-				else
-					set "286"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
-
-					# variable utilisateur majuscule
-					USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
-
-					# stop utilisateur
-					FONCSERVICE stop "$USER"-rtorrent
-
-                    # stop irssi retro-compatible
-					if [ -f "/etc/init.d/"$USER"-irssi" ]; then
-						FONCSERVICE stop "$USER"-irssi
-					fi
-
-					# arrêt user
-					"$CMDPKILL" -u "$USER"
-
-					# suppression script irssi retro-compatible
-					if [ -f "/etc/init.d/"$USER"-irssi" ]; then
-						"$CMDRM" /etc/init.d/"$USER"-irssi
-						"$CMDUPDATERC" "$USER"-irssi remove
-					fi
-
-					"$CMDRM" /etc/init.d/"$USER"-rtorrent
-					"$CMDUPDATERC" "$USER"-rtorrent remove
-
-					# suppression configuration rutorrent
-					"$CMDRM" -R "${RUCONFUSER:?}"/"$USER"
-					"$CMDRM" -R "${RUTORRENT:?}"/share/users/"$USER"
-
-					# suppression mot de passe
-					"$CMDSED" -i "/^$USER/d" "$NGINXPASS"/rutorrent_passwd
-					"$CMDRM" "$NGINXPASS"/rutorrent_passwd_"$USER"
-
-					# suppression nginx
-					"$CMDSED" -i '/location \/'"$USERMAJ"'/,/}/d' "$NGINXENABLE"/rutorrent.conf
-					FONCSERVICE restart nginx
-
-					# suppression backup .session
-					"$CMDSED" -i "/FONCBACKUP $USER/d" "$SCRIPT"/backup-session.sh
-
-					# suppression utilisateur
-					"$CMDDELUSER" "$USER" --remove-home
-					cd "$BONOBOX"
-					"$CMDECHO" ""; set "264" "288"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
-				fi
-			;;
-
-			4) # debug
-				"$CMDCHMOD" a+x "$FILES"/scripts/check-rtorrent.sh
-				"$CMDBASH" "$FILES"/scripts/check-rtorrent.sh
-			;;
-
-            5) # suspendre utilisateur
+			
+			2) # suspendre utilisateur
 				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
 				read -r USER
 
@@ -283,7 +198,7 @@ if FONCYES "$VALIDE"; then
 				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
 
-			6) # rétablir utilisateur
+			3) # rétablir utilisateur
 				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
 				read -r USER
 				"$CMDECHO" ""; set "270"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
@@ -326,6 +241,91 @@ if FONCYES "$VALIDE"; then
 				##########################################################################
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
+			;;
+
+			4) # modification mot de passe utilisateur
+				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
+				read -r USER
+				"$CMDECHO" ""; FONCPASS
+
+				"$CMDECHO" ""; set "276"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
+
+				# variable passe nginx
+				PASSNGINX=${USERPWD}
+
+				# modification du mot de passe
+				"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
+
+				# htpasswd
+				FONCHTPASSWD "$USER"
+
+				"$CMDECHO" ""; set "278" "280"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
+				"$CMDECHO"
+				set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
+				set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
+				set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
+				set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
+			;;
+
+			5) # suppression utilisateur
+				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
+				read -r USER
+				"$CMDECHO" ""; set "282" "284"; FONCTXT "$1" "$2"; "$CMDECHO" -n -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CGREEN}$TXT2 ${CEND}"
+				read -r SUPPR
+
+				if FONCNO "$SUPPR"; then
+					"$CMDECHO"
+				else
+					set "286"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
+
+					# variable utilisateur majuscule
+					USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
+
+					# stop utilisateur
+					FONCSERVICE stop "$USER"-rtorrent
+
+                    # stop irssi retro-compatible
+					if [ -f "/etc/init.d/"$USER"-irssi" ]; then
+						FONCSERVICE stop "$USER"-irssi
+					fi
+
+					# arrêt user
+					"$CMDPKILL" -u "$USER"
+
+					# suppression script irssi retro-compatible
+					if [ -f "/etc/init.d/"$USER"-irssi" ]; then
+						"$CMDRM" /etc/init.d/"$USER"-irssi
+						"$CMDUPDATERC" "$USER"-irssi remove
+					fi
+
+					"$CMDRM" /etc/init.d/"$USER"-rtorrent
+					"$CMDUPDATERC" "$USER"-rtorrent remove
+
+					# suppression configuration rutorrent
+					"$CMDRM" -R "${RUCONFUSER:?}"/"$USER"
+					"$CMDRM" -R "${RUTORRENT:?}"/share/users/"$USER"
+
+					# suppression mot de passe
+					"$CMDSED" -i "/^$USER/d" "$NGINXPASS"/rutorrent_passwd
+					"$CMDRM" "$NGINXPASS"/rutorrent_passwd_"$USER"
+
+					# suppression nginx
+					"$CMDSED" -i '/location \/'"$USERMAJ"'/,/}/d' "$NGINXENABLE"/rutorrent.conf
+					FONCSERVICE restart nginx
+
+					# suppression backup .session
+					"$CMDSED" -i "/FONCBACKUP $USER/d" "$SCRIPT"/backup-session.sh
+
+					# suppression utilisateur
+					"$CMDDELUSER" "$USER" --remove-home
+					cd "$BONOBOX"
+					"$CMDECHO" ""; set "264" "288"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
+				fi
+			;;
+			
+			6) # debug
+				"$CMDCHMOD" a+x "$FILES"/scripts/check-rtorrent.sh
+				"$CMDBASH" "$FILES"/scripts/check-rtorrent.sh
 			;;
 			
 			7) # sortir gestion utilisateurs
