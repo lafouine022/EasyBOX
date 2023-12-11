@@ -28,11 +28,10 @@ Tiré du tutoriel de mondedie.fr
 
 Merci aux contributeurs: Sophie, Spectre, Hardware, Zarev, SirGato, MiguelSam, Hierra, mog54
 
-![caps1](https://raw.github.com/exrat/rutorrent-bonobox/master/files/caps_script01.png)
+![caps2](https://github.com/lafouine022/rutorrent-bonobox/blob/master/files/caps_script02.png)
 
 Pour gérer vos utilisateurs ultérieurement, il vous suffit de relancer le script
 
-![caps2](https://raw.github.com/exrat/rutorrent-bonobox/master/files/caps_script02.png)
 
 ### Disclaimer
 Ce script est proposé à des fins d'expérimentation uniquement, le téléchargement d’oeuvre copyrightées est illégal.
