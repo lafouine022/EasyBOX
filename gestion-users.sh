@@ -266,7 +266,7 @@ if FONCYES "$VALIDE"; then
                 cp "$NGINX_CONFIG" "$NGINX_CONFIG.bak"
 
                 # Ajouter les lignes pour bloquer un utilisateur spécifique
-				sed -i "/location \/rutorrent {/a \    if (\$remote_user = \"$USER_TO_BLOCK\") {\n        return 301 /$USER_TO_BLOCK.html;\n    }" "$NGINX_CONFIG"
+				sed -i "/location \/rutorrent {/a \    if (\$remote_user = \"$USER_TO_BLOCK\") {\n        return 302 /$USER_TO_BLOCK.html;\n    }" "$NGINX_CONFIG"
 				    
 				# Redémarrer Nginx pour appliquer les changements
 				nginx -t
