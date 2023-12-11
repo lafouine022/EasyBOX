@@ -36,13 +36,13 @@ if FONCYES "$VALIDE"; then
 	while :; do
 		# menu gestion multi-utilisateurs
 		"$CMDECHO" ""; set "234"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-		set "236" "248"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+		set "236" "248"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}" 
 		set "238" "254"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "240" "256"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "242" "296"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "244" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-                set "246" "309"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
-		set "310" "311"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+        set "244" "309"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+		set "246" "311"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
+		set "310" "258"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CYELLOW}$TXT1${CEND} ${CGREEN}$TXT2${CEND}"
 		set "260"; FONCTXT "$1"; "$CMDECHO" -n -e "${CBLUE}$TXT1 ${CEND}"
 		read -r OPTION
 
@@ -216,27 +216,7 @@ if FONCYES "$VALIDE"; then
 				"$CMDBASH" "$FILES"/scripts/check-rtorrent.sh
 			;;
 
-			5) # sortir gestion utilisateurs
-				"$CMDECHO" ""; set "290"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
-				read -r REBOOT
-
-				if FONCNO "$REBOOT"; then
-					FONCSERVICE restart nginx &> /dev/null
-					"$CMDECHO" ""; set "200"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"
-					"$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-					"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
-					exit 1
-				fi
-
-				if FONCYES "$REBOOT"; then
-					"$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-					"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
-					"$CMDSYSTEMCTL" reboot
-				fi
-				break
-			;;
-
-                        6) # suspendre utilisateur
+            5) # suspendre utilisateur
 				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
 				read -r USER
 
@@ -283,7 +263,7 @@ if FONCYES "$VALIDE"; then
 				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
 
-			7) # rétablir utilisateur
+			6) # rétablir utilisateur
 				"$CMDECHO" ""; set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
 				read -r USER
 				"$CMDECHO" ""; set "270"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
@@ -307,6 +287,26 @@ if FONCYES "$VALIDE"; then
 				"$CMDRM" "$NGINXBASE"/"$USER".html
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
+			;;
+			
+			7) # sortir gestion utilisateurs
+				"$CMDECHO" ""; set "290"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
+				read -r REBOOT
+
+				if FONCNO "$REBOOT"; then
+					FONCSERVICE restart nginx &> /dev/null
+					"$CMDECHO" ""; set "200"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"
+					"$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+					"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
+					exit 1
+				fi
+
+				if FONCYES "$REBOOT"; then
+					"$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+					"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
+					"$CMDSYSTEMCTL" reboot
+				fi
+				break
 			;;
 
 			*) # fail
