@@ -3,8 +3,6 @@
 ## Installation:
 Multilingue automatique
 ```
-# su -  ou  sudo su -
-
 apt-get update && apt-get upgrade -y
 apt-get install git lsb-release -y
 
