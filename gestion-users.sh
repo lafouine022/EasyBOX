@@ -260,11 +260,15 @@ if FONCYES "$VALIDE"; then
 				"$CMDMV" /home/"$USER"/.rtorrent.rc /home/"$USER"/.rtorrent.rc.bak
 				"$CMDUSERMOD" -L "$USER"
 				##########################################################################
-				NGINX_CONFIG="/etc/nginx/sites-enabled/rutorrent.conf"
-                # Ajouter la règle de redirection pour l'utilisateur 
-                sed -i '/location \/ {/a \        if ($remote_user = "$USER") {\n            return 301 \/"$USER".html;\n        }' "$NGINX_CONFIG"
-                # Redémarrer Nginx pour appliquer les changements
-                sudo service nginx restart
+				NGINX_CONFIG="$NGINXENABLE"/rutorrent.conf
+                USER_TO_BLOCK="$USER"
+
+                # Ajouter les lignes pour bloquer un utilisateur spécifique
+				sed -i "/location \/rutorrent {/a \    if (\$remote_user = \"$USER_TO_BLOCK\") {\n        return 301 /$USER_TO_BLOCK.html;\n    }" "$NGINX_CONFIG"
+				    
+				# Redémarrer Nginx pour appliquer les changements
+				sudo service nginx restart
+				echo "Success! l'utilisateur à été ajoutées à la configuration NGINX et NGINX a été redémarré."
 				##########################################################################
 
 				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
@@ -293,14 +297,18 @@ if FONCYES "$VALIDE"; then
 				# seedbox service normal
 				"$CMDRM" "$NGINXBASE"/"$USER".html
 				
-				#######################################################################
-				# Définir le chemin de la configuration Nginx
-                NGINX_CONFIG="/etc/nginx/sites-enabled/rutorrent.conf"
-                # Supprimer la règle de redirection pour l'utilisateur
-                sed -i '/if ($remote_user = "$USER") {/,/return 301 \/"$USER".html;/d' "$NGINX_CONFIG"
+				#######################################################################  
+                NGINX_CONFIG="$NGINXENABLE"/rutorrent.conf
+                USER_TO_BLOCK="$USER"
+
+                # Ajouter les lignes pour bloquer un utilisateur spécifique
+				sed -i "/location \/rutorrent {/,/if (\$remote_user = \"$USER_TO_BLOCK\") {/d; /return 301 \/$USER_TO_BLOCK.html;/d; /}/d" "$NGINX_CONFIG"
+
+				    
 				# Redémarrer Nginx pour appliquer les changements
 				sudo service nginx restart
-				#######################################################################
+				echo "Success! l'utilisateur à été rétablis à la configuration NGINX et NGINX a été redémarré."
+				##########################################################################
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
 			;;
