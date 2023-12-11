@@ -1,5 +1,21 @@
 # Script d'installation ruTorrent / Nginx Pour Debian 10/11
 
+## Installation:
+Multilingue automatique
+```
+# su -  ou  sudo su -
+
+apt-get update && apt-get upgrade -y
+apt-get install git lsb-release -y
+
+cd /tmp
+git clone https://github.com/lafouine022/rutorrent-bonobox
+cd rutorrent-bonobox
+chmod a+x bonobox.sh && ./bonobox.sh --fr
+
+# English
+chmod a+x bonobox.sh && ./bonobox.sh --en
+```
 * Français, English
 * Nécessite Debian 10/11 (64 bits) & un serveur fraîchement installé
 
@@ -12,27 +28,7 @@ Tiré du tutoriel de mondedie.fr
 
 Merci aux contributeurs: Sophie, Spectre, Hardware, Zarev, SirGato, MiguelSam, Hierra, mog54
 
-## Installation:
-Multilingue automatique
-```
-# su -  ou  sudo su -
-
-apt-get update && apt-get upgrade -y
-apt-get install git lsb-release -y
-
-cd /tmp
-git clone https://github.com/lafouine022/rutorrent-bonobox
-cd rutorrent-bonobox
-# Français
-chmod a+x bonobox.sh && ./bonobox.sh --fr
-```
 ![caps1](https://raw.github.com/exrat/rutorrent-bonobox/master/files/caps_script01.png)
-
-**Vous pouvez aussi forcer la langue de votre choix:**
-```
-# English
-chmod a+x bonobox.sh && ./bonobox.sh --en
-```
 
 Pour gérer vos utilisateurs ultérieurement, il vous suffit de relancer le script
 
