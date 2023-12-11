@@ -271,22 +271,6 @@ if FONCYES "$VALIDE"; then
 				"$CMDSED" -i "s/@USER@/$USER/g;" "$NGINXBASE"/"$USER".html
 				"$CMDCHOWN" -R "$WDATA" "$NGINXBASE"/"$USER".html
 
-				# seedbox-manager service minimum
-				"$CMDMV" "$SBMCONFUSER"/"$USER"/config.ini "$SBMCONFUSER"/"$USER"/config.bak
-				if [ ! -f "$SBM"/sbm_v3 ]; then
-					"$CMDCP" -f "$FILES"/sbm_old/config-mini.ini "$SBMCONFUSER"/"$USER"/config.ini
-				else
-					"$CMDCP" -f "$FILES"/sbm/config-mini.ini "$SBMCONFUSER"/"$USER"/config.ini
-				fi
-
-				"$CMDSED" -i "s/\"\/\"/\"\/home\/$USER\"/g;" "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDSED" -i "s/https:\/\/rutorrent.domaine.fr/..\/$USER.html/g;" "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDSED" -i "s/https:\/\/graph.domaine.fr/..\/$USER.html/g;" "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDSED" -i "s/RPC1/$USERMAJ/g;" "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDSED" -i "s/contact@mail.com/$EMAIL/g;" "$SBMCONFUSER"/"$USER"/config.ini
-
-				"$CMDCHOWN" -R "$WDATA" "$SBMCONFUSER"
-
 				# stop user
 				FONCSERVICE stop "$USER"-rtorrent
 				if [ -f "/etc/irssi.conf" ]; then
@@ -319,10 +303,7 @@ if FONCYES "$VALIDE"; then
 				fi
 				"$CMDUSERMOD" -U "$USER"
 
-				# seedbox-manager service normal
-				"$CMDRM" "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDMV" "$SBMCONFUSER"/"$USER"/config.bak "$SBMCONFUSER"/"$USER"/config.ini
-				"$CMDCHOWN" -R "$WDATA" "$SBMCONFUSER"
+				# seedbox service normal
 				"$CMDRM" "$NGINXBASE"/"$USER".html
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
