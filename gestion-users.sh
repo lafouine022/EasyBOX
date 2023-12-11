@@ -262,13 +262,22 @@ if FONCYES "$VALIDE"; then
 				##########################################################################
 				NGINX_CONFIG="$NGINXENABLE"/rutorrent.conf
                 USER_TO_BLOCK="$USER"
+				#Save config nginx
+                cp "$NGINX_CONFIG" "$NGINX_CONFIG.bak"
 
                 # Ajouter les lignes pour bloquer un utilisateur spécifique
 				sed -i "/location \/rutorrent {/a \    if (\$remote_user = \"$USER_TO_BLOCK\") {\n        return 301 /$USER_TO_BLOCK.html;\n    }" "$NGINX_CONFIG"
 				    
 				# Redémarrer Nginx pour appliquer les changements
-				sudo service nginx restart
-				echo "Success! l'utilisateur à été ajoutées à la configuration NGINX et NGINX a été redémarré."
+				nginx -t
+                if [ $? -eq 0 ]; then
+                # Redémarrer Nginx pour appliquer les changements
+                sudo service nginx restart
+                echo "Success! L'utilisateur $USER_TO_UNBLOCK a été bloqué dans la configuration NGINX, et NGINX a été redémarré."
+                else
+                echo "Erreur: La syntaxe NGINX est incorrecte. Veuillez vérifier la configuration avant de redémarrer Nginx. un backup est present $NGINX_CONFIG.bak"
+                exit 1
+                fi
 				##########################################################################
 
 				"$CMDECHO" ""; set "264" "268"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
@@ -300,13 +309,20 @@ if FONCYES "$VALIDE"; then
 				#######################################################################  
                 NGINX_CONFIG="$NGINXENABLE"/rutorrent.conf
                 USER_TO_BLOCK="$USER"
+                #Save config nginx
+                cp "$NGINX_CONFIG" "$NGINX_CONFIG.bak"
 
-                # Ajouter les lignes pour bloquer un utilisateur spécifique
-				sed -i "/location \/rutorrent {/,/if (\$remote_user = \"$USER_TO_BLOCK\") {/ {/return 301 \/$USER_TO_BLOCK.html;/d; /if (\$remote_user = \"$USER_TO_BLOCK\") {/,/return 301 \/$USER_TO_BLOCK.html;/d; /}/d}" "$NGINX_CONFIG"
-
+				sed -i "/if (\$remote_user = \"$USER_TO_BLOCK\") {/,/}/d" "$NGINX_CONFIG"
 				# Redémarrer Nginx pour appliquer les changements
-				sudo service nginx restart
-				echo "Success! l'utilisateur à été rétablis à la configuration NGINX et NGINX a été redémarré."
+				nginx -t
+                if [ $? -eq 0 ]; then
+                # Redémarrer Nginx pour appliquer les changements
+                sudo service nginx restart
+                echo "Success! L'utilisateur $USER_TO_UNBLOCK a été débloqué dans la configuration NGINX, et NGINX a été redémarré."
+                else
+                echo "Erreur: La syntaxe NGINX est incorrecte. Veuillez vérifier la configuration avant de redémarrer Nginx. un backup est present $NGINX_CONFIG.bak"
+                exit 1
+                fi
 				##########################################################################
 
 				"$CMDECHO" ""; set "264" "272"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND} ${CBLUE}$TXT2${CEND}"
