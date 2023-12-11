@@ -7,11 +7,29 @@
 		<link rel="stylesheet" type="text/css" href="./style/style.css">
 		<link rel="stylesheet" type="text/css" href="./style/style.css">
 		<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0">
+        <meta http-equiv="expires" content="0">
+		<script>
+        function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+        }
+
+        // Appelez la fonction pour supprimer les cookies dès le chargement de la page
+        window.onload = deleteAllCookies;
+    </script>
 	</head>
 
 	<body>
 		<p id="contact">L'accès à ruTorrent pour le compte <span class="contactgr">@USER@</span> est provisoirement désactivé.</p>
-		<p class="contactgr"> Merci de contacter le support Easy-tk rapidement.</p>
+		<p class="contactgr"> Merci de contacter le support <a href="https://easy-tk.biz/submitticket.php?step=2&deptid=1">Easy-tk</a> rapidement.</p>
 	</body>
 </html>
 
