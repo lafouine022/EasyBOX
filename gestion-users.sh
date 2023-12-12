@@ -191,9 +191,9 @@ if FONCYES "$VALIDE"; then
                 if [ $? -eq 0 ]; then
                 # Redémarrer Nginx pour appliquer les changements
                 sudo service nginx restart
-                echo "Success! L'utilisateur $USER_TO_UNBLOCK a été bloqué! NGINX a été redémarré."
+                echo -e "\e[92mSuccess! L'utilisateur $USER_TO_UNBLOCK a été bloqué! NGINX a été redémarré.\e[0m"
                 else
-                echo "Erreur: La syntaxe NGINX est incorrecte! Veuillez vérifier la configuration avant de redémarrer Nginx. Un backup est present ici $NGINX_CONFIG.bak"
+                echo -e "\e[91mErreur: La syntaxe NGINX est incorrecte! Veuillez vérifier la configuration avant de redémarrer Nginx. Un backup est présent ici $NGINX_CONFIG.bak\e[0m"
                 exit 1
                 fi
 				##########################################################################
@@ -236,9 +236,9 @@ if FONCYES "$VALIDE"; then
                 if [ $? -eq 0 ]; then
                 # Redémarrer Nginx pour appliquer les changements
                 sudo service nginx restart
-                echo "Success! L'utilisateur $USER_TO_UNBLOCK a été débloqué! NGINX a été redémarré."
+                echo -e "\e[92mSuccess! L'utilisateur $USER_TO_UNBLOCK a été Débloqué! NGINX a été redémarré.\e[0m"
                 else
-                echo "Erreur: La syntaxe NGINX est incorrecte! Veuillez vérifier la configuration avant de redémarrer Nginx. Un backup est present ici $NGINX_CONFIG.bak"
+                echo -e "\e[91mErreur: La syntaxe NGINX est incorrecte! Veuillez vérifier la configuration avant de redémarrer Nginx. Un backup est présent ici $NGINX_CONFIG.bak\e[0m"
                 exit 1
                 fi
 				##########################################################################
