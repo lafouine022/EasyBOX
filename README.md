@@ -23,6 +23,7 @@ Tiré du tutoriel de mondedie.fr
 [Aide, support & plus si affinités à la même adresse !](http://mondedie.fr/)
 
 **Auteur :** Ex_Rat
+**Modifié par :** Lafouine022
 
 Merci aux contributeurs: Sophie, Spectre, Hardware, Zarev, SirGato, MiguelSam, Hierra, mog54
 
