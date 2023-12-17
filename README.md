@@ -1,4 +1,3 @@
-# EasyBOX
 # Installation:
 Multilingue automatique
 ```
