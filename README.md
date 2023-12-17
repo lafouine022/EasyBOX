@@ -1,6 +1,5 @@
-# RuTorrent / Nginx Pour Debian 10/11
-
-## Installation:
+# EasyBOX
+# Installation:
 Multilingue automatique
 ```
 apt-get update && apt-get upgrade -y
@@ -24,8 +23,6 @@ Tiré du tutoriel de mondedie.fr
 
 **Auteur :** Ex_Rat
 **Modifié par :** Lafouine022
-
-Merci aux contributeurs: Sophie, Spectre, Hardware, Zarev, SirGato, MiguelSam, Hierra, mog54
 
 ![caps2](https://github.com/lafouine022/rutorrent-bonobox/blob/master/files/caps_script02.png)
 
