@@ -19,7 +19,7 @@ chmod a+x bonobox.sh && ./bonobox.sh --en
 **Auteur :** Ex_Rat
 **Modifié par :** Lafouine022
 
-![caps2](https://github.com/lafouine022/rutorrent-bonobox/blob/master/files/caps_script02.png)
+![caps2](https://github.com/lafouine022/EasyBOX/blob/master/files/caps_script02.png)
 
 Pour gérer vos utilisateurs ultérieurement, il vous suffit de relancer le script
 
