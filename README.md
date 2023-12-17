@@ -18,9 +18,6 @@ chmod a+x bonobox.sh && ./bonobox.sh --en
 
 * Inclus VsFTPd (ftp & ftps sur le port 21), Fail2ban (avec conf nginx, ftp & ssh)
 
-Tiré du tutoriel de mondedie.fr
-[Aide, support & plus si affinités à la même adresse !](http://mondedie.fr/)
-
 **Auteur :** Ex_Rat
 **Modifié par :** Lafouine022
 
